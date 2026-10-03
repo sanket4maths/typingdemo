@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Maths Plus - Typing Assessment Portal</title>
+  <style>
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1e429f;
+      --secondary: #e02424;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: white;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand-logo {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      object-fit: cover;
+    }
+
+    .brand-info h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .brand-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .contact-badge {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      text-align: right;
+    }
+
+    .contact-badge strong {
+      color: var(--primary);
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 95%;
+      margin: 20px auto;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .timer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .timer-clock {
+      font-size: 1.4rem;
+      color: #38bdf8;
+      font-family: monospace;
+    }
+
+    /* Passage box with no auto highlight and no auto scroll */
+    .passage-box {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      background: #fdfdfd;
+      border: 1px solid #cbd5e1;
+      padding: 18px;
+      border-radius: 6px;
+      height: 180px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+      user-select: none;
+      -webkit-user-select: none;
+      white-space: pre-wrap;
+    }
+
+    .typing-box {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      height: 180px;
+      resize: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .leaderboard-table th, .leaderboard-table td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+    }
+
+    .leaderboard-table th {
+      background-color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .status-qualified {
+      background-color: #def7ec;
+      color: #03543f;
+    }
+
+    .status-disqualified {
+      background-color: #fde8e8;
+      color: #9b1c1c;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .contact-badge {
+        text-align: left;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-section">
+      <img src="1776253959347.png" alt="Career Maths Plus Logo" class="brand-logo">
+      <div class="brand-info">
+        <h1>Career Maths Plus</h1>
+        <p>Mentored by <strong>Sanket Chowdhury</strong> | Offline Batch: Chakdaha, Nadia</p>
+      </div>
+    </div>
+    <div class="contact-badge">
+      <span>Call / WhatsApp:</span><br>
+      <strong>+91 8001514969</strong>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- REGISTRATION SCREEN -->
+    <div id="registrationScreen" class="card">
+      <h2 style="margin-bottom: 8px;">Candidate Assessment Registration</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
+        Standard WBPSC Clerkship Computer Type Test format. 5 Key Depressions = 1 Word.
+      </p>
+
+      <form id="candidateForm">
+        <div class="form-group">
+          <label for="candName">Candidate Full Name *</label>
+          <input type="text" id="candName" required placeholder="Enter full name">
+        </div>
+        <div class="form-group">
+          <label for="candPhone">Calling / WhatsApp Number *</label>
+          <input type="tel" id="candPhone" pattern="[0-9]{10}" required placeholder="10-digit mobile number">
+        </div>
+        <div class="form-group">
+          <label for="candCategory">Candidate Category *</label>
+          <select id="candCategory" required>
+            <option value="General">General / UR</option>
+            <option value="OBC">OBC-A / OBC-B</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="Blind_LV">Blind / Low Vision</option>
+            <option value="LD_CP">Locomotor Disability / Cerebral Palsy (LD/CP)</option>
+          </select>
+        </div>
+
+        <div style="background: #f1f5f9; padding: 14px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5;">
+          <strong>Official Examination Instructions:</strong>
+          <ul style="padding-left: 20px; margin-top: 6px;">
+            <li>Duration: 10 Minutes. Evaluation: 5 key depressions = 1 word.</li>
+            <li>No auto-highlighting & No automatic scrolling.</li>
+            <li>Major Mistake: 0.33 deduction per word. Minor Mistake: 0.15 deduction per word.</li>
+            <li>Qualifying: Min 200 words (Net) for Normal; Min 120 words for Blind/LV/LDCP.</li>
+          </ul>
+        </div>
+
+        <button type="submit" class="btn">Proceed to Type Test</button>
+      </form>
+    </div>
+
+    <!-- TEST INTERFACE -->
+    <div id="testScreen" class="card hidden">
+      <div class="timer-bar">
+        <div>Candidate: <span id="displayCandName"></span> (<span id="displayCandCat"></span>)</div>
+        <div class="timer-clock" id="timer">10:00</div>
+      </div>
+
+      <label>Master Text Passage (Manual Scroll):</label>
+      <div id="masterPassage" class="passage-box"></div>
+
+      <label for="typeArea">Type the text here (Unrestricted Mode):</label>
+      <textarea id="typeArea" class="typing-box" placeholder="Start typing here..."></textarea>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
+          Key Depressions: <strong id="kdCount">0</strong> | Words Typed: <strong id="wordCount">0</strong>
+        </span>
+        <button id="submitBtn" class="btn" style="width: auto; padding: 8px 20px;">Submit Test</button>
+      </div>
+    </div>
+
+    <!-- RESULT & REPORT SCREEN -->
+    <div id="resultScreen" class="card hidden">
+      <h2>Examination Result Card</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">West Bengal Clerkship Criteria Type Test Report</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="resGrossWpm">0</div>
+          <div class="stat-label">Gross WPM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="resNetWpm">0</div>
+          <div class="stat-label">Net WPM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="resAccuracy">0%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="resMajor" style="color: var(--secondary);">0</div>
+          <div class="stat-label">Major Errors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="resMinor" style="color: #d97706;">0</div>
+          <div class="stat-label">Minor Errors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="resStatus">-</div>
+          <div class="stat-label">Result</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button id="retestBtn" class="btn" style="background: #475569;">Take Another Test</button>
+      </div>
+    </div>
+
+    <!-- PERSISTENT & SECURED LEADERBOARD -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Exam Board Leaderboard</h3>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Protected & Immutable Records</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Candidate Name</th>
+              <th>Category</th>
+              <th>Net WPM</th>
+              <th>Accuracy</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration & Google Sheet Web App URL
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyCJxOte9VccKAgUfsbY0jxs6deK2nx1ZFiNYjdqOowdMG5FY1m3_QsW0tGdHfXmO5MFA/exec";
+
+    // 250 words / 1250 key depressions single-paragraph test passage
+    const TEST_PASSAGE = `A calm morning walk brings true peace & fresh joy to our busy minds! Sunlight filters softly through green leaves, while sweet birds sing #morning tunes from tall pine trees. Taking slow, deep breaths helps you reset: feel the cool air enter your lungs & release all inner doubt. Good daily habits—like drinking pure water, reading daily books, & stretching stiff joints—shape a healthy, happy life. When we plan our tasks carefully, we accomplish goals easily & stay smiling @work. Always remember to stay kind; simple words like "thank you," "hello," & "good job" lift anyone’s mood instantly. Many small steps lead to major success over time, so do not rush your progress! Work with focused attention, rest well each night, & enjoy the quiet moments. Life offers many bright opportunities every day; we only need to look closely & appreciate what surrounds us. Keep your desk tidy, organize files neatly, & take brief screen breaks to relax tired eyes. Eating fresh fruit, walking outdoors, & chatting with true friends will keep your spirits high & steady. Even when things feel hard, maintain hope & move forward with courage! Every single sunrise brings a clean slate & fresh energy to try again. Learn from small mistakes, embrace new lessons, & keep growing stronger each day. Smile often, think positively, & cherish your journey; life is full of wonderful surprises & sweet memories!`;
+
+    // Elements
+    const regScreen = document.getElementById("registrationScreen");
+    const testScreen = document.getElementById("testScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const masterPassage = document.getElementById("masterPassage");
+    const typeArea = document.getElementById("typeArea");
+    const timerElem = document.getElementById("timer");
+    const kdCountElem = document.getElementById("kdCount");
+    const wordCountElem = document.getElementById("wordCount");
+    const leaderboardBody = document.getElementById("leaderboardBody");
+
+    let candidate = {};
+    let timer = null;
+    let timeLeft = 600; // 10 minutes in seconds
+    let startTime = null;
+
+    masterPassage.innerText = TEST_PASSAGE;
+
+    // Secret Salt for local tamper protection
+    const INTEGRITY_SALT = "CMP_SANKET_CHOWDHURY_2026_LEADERBOARD_SALT";
+
+    async function generateChecksum(dataStr) {
+      const msgBuffer = new TextEncoder().encode(dataStr + INTEGRITY_SALT);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // Load and Render Leaderboard
+    async function loadLeaderboard() {
+      const rawData = localStorage.getItem("cmp_leaderboard_data");
+      const storedHash = localStorage.getItem("cmp_leaderboard_hash");
+
+      if (!rawData || !storedHash) {
+        leaderboardBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #94a3b8;">No test entries yet.</td></tr>`;
+        return;
+      }
+
+      const calculatedHash = await generateChecksum(rawData);
+      if (calculatedHash !== storedHash) {
+        leaderboardBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #ef4444;">Tamper alert: Stored entries verification failed!</td></tr>`;
+        return;
+      }
+
+      let entries = JSON.parse(rawData);
+      entries.sort((a, b) => b.netWpm - a.netWpm);
+
+      leaderboardBody.innerHTML = entries.map((e, idx) => `
+        <tr>
+          <td><strong>#${idx + 1}</strong></td>
+          <td>${escapeHtml(e.name)}</td>
+          <td>${escapeHtml(e.category)}</td>
+          <td><strong>${e.netWpm}</strong></td>
+          <td>${e.accuracy}%</td>
+          <td><span class="status-badge ${e.status === 'Qualified' ? 'status-qualified' : 'status-disqualified'}">${e.status}</span></td>
+          <td>${e.date}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function saveLeaderboardEntry(entry) {
+      let entries = [];
+      const rawData = localStorage.getItem("cmp_leaderboard_data");
+      const storedHash = localStorage.getItem("cmp_leaderboard_hash");
+
+      if (rawData && storedHash) {
+        const verified = (await generateChecksum(rawData)) === storedHash;
+        if (verified) {
+          entries = JSON.parse(rawData);
+        }
+      }
+
+      entries.push(entry);
+      const serialized = JSON.stringify(entries);
+      const hash = await generateChecksum(serialized);
+
+      localStorage.setItem("cmp_leaderboard_data", serialized);
+      localStorage.setItem("cmp_leaderboard_hash", hash);
+      loadLeaderboard();
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"']/g, function(s) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s];
+      });
+    }
+
+    // Start Exam Process
+    document.getElementById("candidateForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      candidate = {
+        name: document.getElementById("candName").value.trim(),
+        phone: document.getElementById("candPhone").value.trim(),
+        category: document.getElementById("candCategory").value
+      };
+
+      document.getElementById("displayCandName").innerText = candidate.name;
+      document.getElementById("displayCandCat").innerText = candidate.category;
+
+      regScreen.classList.add("hidden");
+      testScreen.classList.remove("hidden");
+      typeArea.focus();
+
+      startTimer();
+    });
+
+    function startTimer() {
+      startTime = new Date();
+      timer = setInterval(() => {
+        timeLeft--;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
+        timerElem.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          evaluateTest();
+        }
+      }, 1000);
+    }
+
+    // Typing Event Handler (No auto scroll, count strokes)
+    typeArea.addEventListener("input", () => {
+      const text = typeArea.value;
+      const keyDepressions = text.length;
+      kdCountElem.innerText = keyDepressions;
+      wordCountElem.innerText = (keyDepressions / 5).toFixed(1);
+    });
+
+    // Disable copy-paste & right clicks in text box for exam integrity
+    typeArea.addEventListener("paste", e => e.preventDefault());
+    typeArea.addEventListener("copy", e => e.preventDefault());
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      if (confirm("Are you sure you want to finish the test?")) {
+        clearInterval(timer);
+        evaluateTest();
+      }
+    });
+
+    // WBPSC Rules Evaluation
+    async function evaluateTest() {
+      testScreen.classList.add("hidden");
+      resultScreen.classList.remove("hidden");
+
+      const typedText = typeArea.value;
+      const totalKeyDepressions = typedText.length;
+      const grossTypedWords = totalKeyDepressions / 5; // 5 key depression = 1 word
+
+      const masterWords = TEST_PASSAGE.trim().split(/\s+/);
+      const typedWords = typedText.trim().split(/\s+/);
+
+      let majorMistakes = 0;
+      let minorMistakes = 0;
+
+      // Word-by-word comparison for major/minor errors
+      const evalLimit = Math.max(typedWords.length, masterWords.length);
+      for (let i = 0; i < typedWords.length; i++) {
+        const typed = typedWords[i] || "";
+        const target = masterWords[i] || "";
+
+        if (!target) {
+          majorMistakes++; // Insertion of foreign words
+          continue;
+        }
+
+        if (typed === target) {
+          continue; // Exact match
+        }
+
+        // Check if only casing is wrong (Minor mistake)
+        if (typed.toLowerCase() === target.toLowerCase()) {
+          minorMistakes++;
+          continue;
+        }
+
+        // Check if alphanumeric matches but punctuation differs (Minor mistake)
+        const stripPunct = str => str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()'"?@]/g, "");
+        if (stripPunct(typed) === stripPunct(target)) {
+          minorMistakes++;
+          continue;
+        }
+
+        // Otherwise counts as spelling / punctuation embedded error (Major mistake)
+        majorMistakes++;
+      }
+
+      // If user typed less than original words, count omissions as major mistakes
+      if (masterWords.length > typedWords.length) {
+        majorMistakes += (masterWords.length - typedWords.length);
+      }
+
+      // Deduction formula: Total Typed Words - (0.33 * Major) - (0.15 * Minor)
+      const deduction = (0.33 * majorMistakes) + (0.15 * minorMistakes);
+      let netWords = grossTypedWords - deduction;
+      if (netWords < 0) netWords = 0;
+
+      const elapsedMinutes = (600 - timeLeft) / 60 || 1;
+      const grossWpm = Math.round(grossTypedWords / elapsedMinutes);
+      const netWpm = Math.round(netWords / elapsedMinutes);
+
+      let accuracy = grossTypedWords > 0 ? Math.max(0, Math.round((netWords / grossTypedWords) * 100)) : 0;
+
+      // Qualifying Criteria check
+      const isReservedOrPwd = (candidate.category === "Blind_LV" || candidate.category === "LD_CP");
+      const qualifyingWordsThreshold = isReservedOrPwd ? 120 : 200;
+      const status = (netWords >= qualifyingWordsThreshold) ? "Qualified" : "Disqualified";
+
+      // Render Results
+      document.getElementById("resGrossWpm").innerText = grossWpm;
+      document.getElementById("resNetWpm").innerText = netWpm;
+      document.getElementById("resAccuracy").innerText = `${accuracy}%`;
+      document.getElementById("resMajor").innerText = majorMistakes;
+      document.getElementById("resMinor").innerText = minorMistakes;
+      
+      const statusBadge = document.getElementById("resStatus");
+      statusBadge.innerText = status;
+      statusBadge.className = `stat-val ${status === "Qualified" ? "status-qualified" : "status-disqualified"}`;
+
+      const entry = {
+        name: candidate.name,
+        phone: candidate.phone,
+        category: candidate.category,
+        grossWpm: grossWpm,
+        netWpm: netWpm,
+        accuracy: accuracy,
+        majorMistakes: majorMistakes,
+        minorMistakes: minorMistakes,
+        status: status,
+        date: new Date().toLocaleDateString("en-IN")
+      };
+
+      // Save to local immutable leaderboard
+      await saveLeaderboardEntry(entry);
+
+      // Send to Google Sheets if endpoint configured
+      if (GOOGLE_SHEET_WEBAPP_URL && GOOGLE_SHEET_WEBAPP_URL.startsWith("https://")) {
+        try {
+          fetch(GOOGLE_SHEET_WEBAPP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry)
+          });
+        } catch (err) {
+          console.error("Cloud sync error: ", err);
+        }
+      }
+    }
+
+    document.getElementById("retestBtn").addEventListener("click", () => {
+      window.location.reload();
+    });
+
+    // Initialize leaderboard on load
+    loadLeaderboard();
+  </script>
+</body>
+</html>
